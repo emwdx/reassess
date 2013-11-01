@@ -6,7 +6,7 @@ save_path = '/Users/weinbergmath/Sites/reassess/images/'
 courses = ['geo','alg2','calc','phys']
 
 
-HOST = '172.27.8.150'
+HOST = '172.27.8.15'
 
 def addBaseDir(questions):
     for question in questions:
