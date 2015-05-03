@@ -28,6 +28,8 @@ Course:
   <option value = 'alg2'>Advanced Algebra</option>
   <option value = 'calc'>Calculus</option>
   <option value = 'phys'>Physics</option>
+  <option value = 'ibmath'>IB Math</option>
+  <option value = 'ibphysics'>IB Physics</option>
  </select>
 
 Unit:
@@ -41,6 +43,7 @@ Unit:
   <option value = '7'>7</option>
   <option value = '8'>8</option>
   <option value = '9'>9</option>
+   <option value = '10'>10</option>
    </select>
 Standard:
 <select name = 'standard' >
@@ -52,7 +55,7 @@ Standard:
   <option value = '6'>6</option>
   <option value = '7'>7</option>
   <option value = '8'>8</option>
-  <option value = '9'>9</option>
+  
    </select>
    
 </div>

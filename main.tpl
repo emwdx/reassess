@@ -25,6 +25,9 @@
 <li><a href = "/course/alg2">Algebra 2</a></li>
 <li><a href = "/course/geo">Geometry</a></li>
 <li><a href = "/course/phys">Physics</a></li>
+<li><a href = "/course/ibmath">IB Math</a></li>
+<li><a href = "/course/ibphysics">IB Physics</a></li>
+    
 </ul>
 </div>
 </div>
@@ -37,6 +40,7 @@
 <li><a href = "/setClassQuiz/math10/">Algebra 2</a></li>
 <li><a href = "/setClassQuiz/math9/">Geometry</a></li>
 <li><a href = "/setClassQuiz/phys/">Physics</a></li>
+<li><a href = "/setClassQuiz/ibmath/">IB Math</a></li>
 </ul>
 </div>
 </div>

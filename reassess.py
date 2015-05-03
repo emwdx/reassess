@@ -3,11 +3,12 @@ import sqlite3, csv
 
 baseDir = '/static/reassess/'
 save_path = '/Users/weinbergmath/Sites/reassess/images/'
-courses = ['geo','alg2','calc','phys']
+courses = ['geo','alg2','calc','phys','ibmath','ibphysics']
 
 
-HOST = '172.27.8.15'
-
+HOST = '172.27.104.62'
+#HOST = 'localhost'
+PORT = 8000
 def addBaseDir(questions):
     for question in questions:
         if(question[2]!=''):
@@ -32,7 +33,7 @@ def createQuizDatabase():
 def addstudents(studentinfo):
     
     database = sqlite3.connect('quizzes.db')
-    print("INSERT INTO quizzes(username, studentID, password, questions, usedQuestions, course) VALUES (%s,%s,%s,%s,%s,%s)"%(studentinfo[0],studentinfo[1], studentinfo[2], studentinfo[3], studentinfo[4], studentinfo[5]) )
+    #print("INSERT INTO quizzes(username, studentID, password, questions, usedQuestions, course) VALUES (%s,%s,%s,%s,%s,%s)"%(studentinfo[0],studentinfo[1], studentinfo[2], studentinfo[3], studentinfo[4], studentinfo[5]) )
     database.execute("INSERT INTO quizzes(username, studentID, password, questions, usedQuestions, course) VALUES(?,?,?,?,?,?)",(studentinfo[0],studentinfo[1], studentinfo[2], studentinfo[3], studentinfo[4], studentinfo[5]) )
     database.commit()
 
@@ -60,7 +61,7 @@ def getQuizByUsername(username):
 def getQuizByCourse(course):
     conn = sqlite3.connect('quizzes.db')
     c = conn.cursor()
-    c.execute("SELECT username, studentID, password, questions, usedQuestions, course FROM quizzes WHERE course LIKE '%s'"%(course))
+    c.execute("SELECT username, studentID, password, questions, usedQuestions, course FROM quizzes WHERE course LIKE '%s' ORDER BY username"%(course))
     retrievedQuiz = list(c.fetchall())
     
     if(len(retrievedQuiz)==0):
@@ -122,6 +123,18 @@ def getQuestionByCourse(course):
          
     return questions
 
+def getQuestionsWithImages():
+    conn = sqlite3.connect('questions2.db')
+    c = conn.cursor()
+    c.execute("SELECT questionText,questionAnswer, image,unit,standard, standardText,id FROM questions WHERE image LIKE '/Users/weinbergmath/Sites/reassess/images/%' ORDER BY id")
+    retrievedQuestions = list(c.fetchall())
+    #print(len(retrievedQuestions))
+
+getQuestionsWithImages()
+    
+
+
+
 @route('/delete/<questionID>')
 def deleteEntry(questionID):
     removeQuestionByID(questionID)
@@ -148,7 +161,7 @@ def editQuestion(questionID):
         unitIndex = question[4]-1
         standardIndex = question[5]-1
  
-        course = ['','','','']
+        course = ['','','','','','']
         unit = ['','','','','','','','','']
         standard = ['','','','','','','','','']
         course[courseIndex] = 'selected'
@@ -202,7 +215,7 @@ def changeQuestion(questionID):
         q1 = getQuestionFromDatabase([questionID])
         q1 = addBaseDir(q1)
         showAnswers = True
-        return  template('quiz.tpl', questions = q1, showAnswers = showAnswers)
+        return  template('quizsol.tpl', questions = q1, showAnswers = showAnswers)
         
 @get('/add/')
 def getQuestion():
@@ -243,7 +256,7 @@ def addQuestion():
 @get('/')
 def front():
  
-     return  template('frontpage.tpl')
+     return  template('frontpage.tpl',host = HOST, port = PORT)
 
 
 
@@ -266,13 +279,14 @@ def showQuestion(questionNumber):
 
 
 @get('/quiz/<username>/')
+@get('/quiz/<username>')
 def generateQuizFromDB(username,key = ''):
     
     questionList = getQuizByUsername(username)[3]
     
     if(questionList!=[]):
         questionList = questionList.split(',')
-        print(questionList)
+        #print(questionList)
         for question in questionList:
             question = int(question)
         questions = getQuestionFromDatabase(questionList)
@@ -286,14 +300,14 @@ def generateQuizFromDB(username,key = ''):
     else:
         return "User name isn't found!"
 
-@get('/quizSol/<username>/')
+@get('/quizSol2/<username>/')
 def generateQuizFromDB(username,key = '14159'):
     
     questionList = getQuizByUsername(username)[3]
     
     if(questionList!=[]):
         questionList = questionList.split(',')
-        print(questionList)
+        #print(questionList)
         for question in questionList:
             question = int(question)
         questions = getQuestionFromDatabase(questionList)
@@ -303,7 +317,7 @@ def generateQuizFromDB(username,key = '14159'):
         else:
             showAnswers = False
  
-        return  template('quiz.tpl', questions = questions, showAnswers = showAnswers)
+        return  template('quizsol.tpl', questions = questions, showAnswers = showAnswers)
     else:
         return "User name isn't found!"
 
@@ -347,13 +361,40 @@ def setClassQuiz(course):
  
     for quiz in courseQuizzes:
         quizQuestions = request.forms.get(quiz[0])
-        c.execute("UPDATE quizzes SET questions=? WHERE username LIKE ?",(quizQuestions,quiz[0]))
+        usedQuestions = request.forms.get(quiz[0]+'_used')
+        questions = quizQuestions.split(',')
+        
+        for quizQuestion in questions:
+            if(usedQuestions.find(quizQuestion)==-1):
+                usedQuestions=usedQuestions +quizQuestion + ','
+        
+            
+        c.execute("UPDATE quizzes SET questions=?,usedQuestions = ? WHERE username LIKE ?",(quizQuestions,usedQuestions,quiz[0]))
     conn.commit()
 
     return template('success.tpl',course = course, function = 'setClassQuiz')
-        
 
-run(host = HOST, port = 8080, debug = True)
+@get('/quizSolsClass/<course>/')
+def getCourseQuizzesFromDB(course,key = '14159'):
+    courseQuizzes = getQuizByCourse(course)
+    classQuestionSet = []
+    for quiz in courseQuizzes:
+        currentQuestionList = getQuizByUsername(quiz[0])[3]
+        
+        currentQuestionList = currentQuestionList.split(',')
+        for question in currentQuestionList:
+            question = int(question)
+        questions = getQuestionFromDatabase(currentQuestionList)
+        questions = addBaseDir(questions)
+        showAnswers = True
+        classQuestionSet.append([quiz[0],questions])
+    
+        
+    return  template('quizsolcourse.tpl', classQuestionSet = classQuestionSet, showAnswers = showAnswers)
+    
+       
+
+run(host = HOST, port = PORT, debug = True)
 
 
 

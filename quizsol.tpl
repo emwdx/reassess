@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<script type="text/javascript"
-   src="/static/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+<script type="text/javascript" src="/static/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 <script src = "/static/jquery/jquery-1.7.2.min.js"></script>
 
@@ -79,20 +77,4 @@
 </div>
 </body>
 </html>
-<script>
-$(document).ready(function(){
-/*
-$('body').hide();
-var pwd = prompt('Enter the password for the quiz');
-if(pwd == 'bday'){
-
-$('body').fadeToggle();
-
-}
-*/
-
-});
-
-
-</script>
 

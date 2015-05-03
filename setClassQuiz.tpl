@@ -19,7 +19,7 @@
 <form class = "form" action = "/setClassQuiz/{{courseQuizzes[0][5]}}/" method = "POST">
 <table class = "table table-bordered table-striped">
 %for quiz in courseQuizzes:
-<tr><td><a href = "/quizSol/{{quiz[0]}}/">{{quiz[0]}}</a></td><td><input type = text name = "{{quiz[0]}}" value = "{{quiz[3]}}" </td></tr>
+<tr><td><a href = "/quizSol2/{{quiz[0]}}/">{{quiz[0]}}</a></td><td><input type = text name = "{{quiz[0]}}" value = "{{quiz[3]}}" </td><td>Used Questions:<input type = text name = "{{quiz[0]}}_used" value = "{{quiz[4]}}"> </td></tr>
 %end
 </table>
 <button type = "submit" class = "btn">Submit</button>

@@ -71,6 +71,8 @@ Course:
   <option value = 'alg2' {{question[3][1]}}>Advanced Algebra</option>
   <option value = 'calc' {{question[3][2]}}>Calculus</option>
   <option value = 'phys' {{question[3][3]}}>Physics</option>
+   <option value = 'ibmath' {{question[3][4]}}>IB Math</option>
+  <option value = 'ibphysics' {{question[3][5]}}>IB Physics</option>
  </select>
 
 Unit:
